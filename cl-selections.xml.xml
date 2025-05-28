@@ -1,0 +1,493 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<SnapperProject>
+    <OutputDir>D:/Чистякова/Камзолкин/24-15-b/24-15b-pano-CL</OutputDir>
+    <Autosignal>0</Autosignal>
+    <Autofocus>0</Autofocus>
+    <Panorama size="100" shadingCorrection="0" type="1" maxWidth="42000"></Panorama>
+    <Image filetype="3" height="0" infobar="1" width="0"></Image>
+    <Detectors columnType="0" columnIndex="0">
+        <Mixer secondDetector="SE" add="1" fistDetector="LE BSE" ratio="0.5" enabled="0"></Mixer>
+        <Detector>CL</Detector>
+    </Detectors>
+    <Detectors columnType="2" columnIndex="0">
+        <Mixer secondDetector="" add="1" fistDetector="" ratio="0.5" enabled="0"></Mixer>
+    </Detectors>
+    <Objects columnType="0" columnIndex="0">
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture1" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="9.2791904" y="15.76325"/>
+            <Point x="8.8961717" y="16.312799"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture2" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.8920084" y="16.121289"/>
+            <Point x="8.717152" y="16.425207"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture3" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.8836819" y="15.879821"/>
+            <Point x="8.7213153" y="16.075494"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture4" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.6838461" y="15.75076"/>
+            <Point x="8.2883376" y="16.1088"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture5" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.2966641" y="15.675822"/>
+            <Point x="8.1259709" y="15.838189"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture6" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.6755196" y="16.137942"/>
+            <Point x="8.2883376" y="16.408554"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture7" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.2133991" y="15.938107"/>
+            <Point x="7.909482" y="16.312799"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture8" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.8511966" y="15.767413"/>
+            <Point x="7.5306265" y="16.179575"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture9" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.5014838" y="15.938107"/>
+            <Point x="7.2308727" y="16.242024"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture10" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.1600975" y="16.167085"/>
+            <Point x="7.0143839" y="16.350268"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture11" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.8212332" y="16.687491"/>
+            <Point x="8.1925829" y="17.262019"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture12" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="9.0960076" y="17.445202"/>
+            <Point x="8.8878452" y="17.611732"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture13" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.81707" y="17.303652"/>
+            <Point x="8.3174803" y="17.844874"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture14" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="8.2841743" y="17.307815"/>
+            <Point x="7.976094" y="17.499324"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture15" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.9802573" y="17.137122"/>
+            <Point x="7.7512786" y="17.3661"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture16" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.8803393" y="17.478508"/>
+            <Point x="7.6721769" y="17.661691"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture17" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.6888299" y="17.203734"/>
+            <Point x="7.2683419" y="17.590916"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture18" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.2725052" y="17.611732"/>
+            <Point x="6.9894044" y="17.840711"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture19" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.1226283" y="16.849858"/>
+            <Point x="6.9061394" y="17.062183"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture20" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="7.1725873" y="17.278672"/>
+            <Point x="6.6771608" y="17.5701"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture21" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.7083841" y="15.744513"/>
+            <Point x="6.4627525" y="15.998471"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture22" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.2545902" y="15.577983"/>
+            <Point x="6.0297748" y="15.890227"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture23" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.2587534" y="15.936023"/>
+            <Point x="5.8840611" y="16.281572"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture24" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.4252833" y="16.165001"/>
+            <Point x="6.1921414" y="16.39398"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture25" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.8590816" y="15.898553"/>
+            <Point x="5.5967971" y="16.252429"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture26" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.4052877" y="15.640432"/>
+            <Point x="5.2179415" y="15.898553"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture27" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.4177774" y="16.07341"/>
+            <Point x="5.1721458" y="16.431449"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture28" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.117203" y="16.789488"/>
+            <Point x="5.9132039" y="17.005977"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture29" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.5751602" y="17.114222"/>
+            <Point x="6.1047132" y="17.834463"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture30" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="6.083897" y="17.276588"/>
+            <Point x="5.9340201" y="17.505567"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture31" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.7674902" y="17.255772"/>
+            <Point x="5.6051236" y="17.447281"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture32" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.7966329" y="17.53471"/>
+            <Point x="5.646756" y="17.747035"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture33" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.3844714" y="17.443118"/>
+            <Point x="5.2054518" y="17.692913"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture34" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.7766325" y="15.182472"/>
+            <Point x="4.5684702" y="15.378145"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture35" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.7974488" y="15.819449"/>
+            <Point x="4.41443" y="16.152509"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture36" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.1812882" y="15.786143"/>
+            <Point x="3.60676" y="16.314876"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture37" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.5651276" y="15.819449"/>
+            <Point x="3.3319857" y="16.035938"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture38" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.4235771" y="16.131693"/>
+            <Point x="3.1571293" y="16.393977"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture39" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.2070883" y="15.886061"/>
+            <Point x="2.9947627" y="16.214958"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture40" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.9239875" y="16.044265"/>
+            <Point x="2.6783559" y="16.294059"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture41" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.3111695" y="15.382308"/>
+            <Point x="3.1196601" y="15.569654"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture42" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.0780276" y="15.232431"/>
+            <Point x="2.8448858" y="15.515532"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture43" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.4102668" y="16.56467"/>
+            <Point x="4.1812882" y="16.793649"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture44" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.5609643" y="16.556344"/>
+            <Point x="3.2820267" y="16.872751"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture45" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.205447" y="17.268259"/>
+            <Point x="5.0139377" y="17.459769"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture46" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.9389992" y="17.080913"/>
+            <Point x="4.6101027" y="17.330708"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture47" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.6642249" y="17.010138"/>
+            <Point x="4.3394916" y="17.289076"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture48" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="5.0056112" y="17.484748"/>
+            <Point x="4.818265" y="17.772012"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture49" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.7641428" y="17.393157"/>
+            <Point x="4.514348" y="17.647115"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture50" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.497695" y="17.305729"/>
+            <Point x="4.1188395" y="17.697074"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture51" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.1979412" y="16.947689"/>
+            <Point x="3.8856976" y="17.226627"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture52" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="4.060554" y="17.293239"/>
+            <Point x="3.8565549" y="17.572176"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture53" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.8607181" y="17.147525"/>
+            <Point x="3.4027609" y="17.53887"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture54" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.5817805" y="17.484748"/>
+            <Point x="3.3236592" y="17.780339"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture55" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.3652917" y="16.985158"/>
+            <Point x="3.1279866" y="17.318218"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture56" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.1113336" y="17.110056"/>
+            <Point x="2.7532943" y="17.522217"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture57" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="3.1529661" y="17.468095"/>
+            <Point x="2.9531302" y="17.726216"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture58" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.7012531" y="15.709121"/>
+            <Point x="2.480601" y="15.929773"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture59" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.6804369" y="15.971406"/>
+            <Point x="2.2849284" y="16.308629"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture60" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.2932549" y="15.74659"/>
+            <Point x="1.9935011" y="16.162915"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture61" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.9851746" y="16.008875"/>
+            <Point x="1.7270532" y="16.287812"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture62" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.7437062" y="15.467653"/>
+            <Point x="1.5188909" y="15.646672"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture63" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.5605233" y="15.92561"/>
+            <Point x="1.4023199" y="16.150425"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture64" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.9560318" y="16.533444"/>
+            <Point x="1.756196" y="16.770749"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture65" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.7470489" y="17.162094"/>
+            <Point x="2.4181523" y="17.607562"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture66" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.3307241" y="17.103809"/>
+            <Point x="2.1059087" y="17.370257"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture67" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.2599489" y="17.54095"/>
+            <Point x="2.1350515" y="17.715806"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture68" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="2.126725" y="17.457685"/>
+            <Point x="1.9060729" y="17.765765"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture69" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.9643583" y="16.958095"/>
+            <Point x="1.5855028" y="17.370257"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture70" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.5563601" y="17.162094"/>
+            <Point x="1.3731772" y="17.378583"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture71" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.72289" y="17.478501"/>
+            <Point x="1.5147276" y="17.782418"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture72" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.4772584" y="17.411889"/>
+            <Point x="1.3065652" y="17.628378"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture73" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.2628504" y="15.386467"/>
+            <Point x="1.0755042" y="15.577977"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture74" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.1837487" y="15.065897"/>
+            <Point x="0.8007299" y="15.344835"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture75" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.38024192" y="15.078387"/>
+            <Point x="0.10546759" y="15.332345"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture76" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.3586051" y="15.702874"/>
+            <Point x="0.72579145" y="16.339851"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture77" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.68415898" y="15.852751"/>
+            <Point x="0.49681284" y="16.06924"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture78" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.42187439" y="15.552997"/>
+            <Point x="-0.098531537" y="16.04426"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture79" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.11518453" y="15.611282"/>
+            <Point x="-0.34832638" y="15.881894"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture80" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.54260856" y="16.010954"/>
+            <Point x="-0.040246073" y="16.385647"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture81" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.70081197" y="16.356504"/>
+            <Point x="0.33028295" y="16.568829"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture82" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.19705903" y="16.622952"/>
+            <Point x="-0.048572568" y="16.814461"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture83" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.2212179" y="17.397316"/>
+            <Point x="1.0088923" y="17.613804"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture84" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="1.0463615" y="17.122541"/>
+            <Point x="0.82570939" y="17.388989"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture85" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.8090564" y="17.068419"/>
+            <Point x="0.3968949" y="17.634621"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture86" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.42187439" y="17.072582"/>
+            <Point x="0.22203851" y="17.297398"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture87" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.30114021" y="17.384826"/>
+            <Point x="0.14710006" y="17.597151"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture88" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.1595898" y="16.931032"/>
+            <Point x="-0.26506143" y="17.280745"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture89" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="0.11379408" y="17.459764"/>
+            <Point x="-0.11518453" y="17.717886"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture90" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.45032752" y="15.825688"/>
+            <Point x="-0.66265314" y="16.083809"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture91" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.77922407" y="15.721606"/>
+            <Point x="-1.1497531" y="16.196217"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture92" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.1247736" y="15.771565"/>
+            <Point x="-1.2954667" y="15.967238"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture93" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.3370992" y="14.993038"/>
+            <Point x="-1.7076282" y="15.421853"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture94" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.83750953" y="16.171237"/>
+            <Point x="-1.1414266" y="16.446011"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture95" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.1997121" y="16.004707"/>
+            <Point x="-1.4661599" y="16.346093"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture96" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.4120377" y="15.784055"/>
+            <Point x="-1.8866479" y="16.142094"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture97" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.5952206" y="16.254502"/>
+            <Point x="-1.8200359" y="16.504297"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture98" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.25465489" y="17.012213"/>
+            <Point x="-0.46698051" y="17.237028"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture99" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.5627352" y="16.99556"/>
+            <Point x="-0.77922407" y="17.30364"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture100" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.17138994" y="17.349436"/>
+            <Point x="-0.48779675" y="17.628374"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture101" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-0.67097963" y="17.411885"/>
+            <Point x="-1.0748146" y="17.774087"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture102" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.0789779" y="16.920622"/>
+            <Point x="-1.3537522" y="17.245355"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture103" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.1247736" y="17.282824"/>
+            <Point x="-1.3579155" y="17.528456"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture104" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.0956309" y="17.565925"/>
+            <Point x="-1.349589" y="17.857352"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture105" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.366242" y="17.245355"/>
+            <Point x="-1.5119556" y="17.486823"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture106" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.4328539" y="17.532619"/>
+            <Point x="-1.6077103" y="17.79074"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture107" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.8470961" y="15.582136"/>
+            <Point x="-2.2009721" y="15.806952"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture108" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.9178713" y="14.986792"/>
+            <Point x="-2.0885645" y="15.182464"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture109" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.1926457" y="15.103363"/>
+            <Point x="-2.4257875" y="15.482218"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture110" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.450767" y="15.224097"/>
+            <Point x="-2.7505208" y="15.428096"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture111" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.4091345" y="15.473892"/>
+            <Point x="-2.5923174" y="15.723687"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture112" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.887908" y="15.269893"/>
+            <Point x="-3.2209678" y="15.544667"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture113" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.2301149" y="15.765319"/>
+            <Point x="-2.8004798" y="16.148338"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture114" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.030279" y="16.03593"/>
+            <Point x="-2.3633388" y="16.335684"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture115" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.7755003" y="16.364827"/>
+            <Point x="-3.0169686" y="16.589642"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture116" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.3383593" y="17.243272"/>
+            <Point x="-2.6006439" y="17.701229"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture117" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.576485" y="17.039273"/>
+            <Point x="-1.9761568" y="17.397312"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture118" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-1.9595038" y="17.409802"/>
+            <Point x="-2.1759927" y="17.634617"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="15" wd="21.360051" name="Capture119" type="0" filename="24-15-b-CL" z="39.029327">
+            <Point x="-2.1510132" y="17.880249"/>
+            <Point x="-1.6181175" y="17.580495"/>
+        </Object>
+    </Objects>
+</SnapperProject>

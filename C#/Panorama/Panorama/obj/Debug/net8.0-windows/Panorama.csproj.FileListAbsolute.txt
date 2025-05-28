@@ -1,0 +1,17 @@
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\Panorama.exe
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\Panorama.deps.json
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\Panorama.runtimeconfig.json
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\Panorama.dll
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\Panorama.pdb
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.Form1.resources
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.csproj.GenerateResource.cache
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.AssemblyInfoInputs.cache
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.AssemblyInfo.cs
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.csproj.CoreCompileInputs.cache
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.sourcelink.json
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.dll
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\refint\Panorama.dll
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.pdb
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.genruntimeconfig.cache
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\ref\Panorama.dll
