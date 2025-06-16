@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "oow9EskCzxU=",
+  "dgSpecHash": "EdQh+WJqn8M=",
   "success": true,
   "projectFilePath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Rudko\\.nuget\\packages\\sixlabors.imagesharp\\3.1.10\\sixlabors.imagesharp.3.1.10.nupkg.sha512"
+  ],
   "logs": []
 }

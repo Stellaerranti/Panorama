@@ -15,3 +15,6 @@ C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-w
 C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.pdb
 C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.genruntimeconfig.cache
 C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\ref\Panorama.dll
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.csproj.AssemblyReference.cache
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\bin\Debug\net8.0-windows\SixLabors.ImageSharp.dll
+C:\Users\Rudko\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.csproj.Up2Date

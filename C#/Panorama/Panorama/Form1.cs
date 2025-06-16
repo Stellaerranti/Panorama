@@ -1,8 +1,15 @@
+﻿using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+
+using SDImage = System.Drawing.Image;
 
 namespace Panorama
 {
@@ -12,11 +19,13 @@ namespace Panorama
         private string imageFolderPath = string.Empty;
         private string coordFilePath = string.Empty;
 
-        List<(string, Image)> images = new();
-        public List<(string name, float x, float y, float z)> Locations { get; } = [];
+        List<(string, System.Drawing.Image)> images = new();
+        public List<(string name, float x, float y, float z, float viewfield)> Locations { get; } = [];
 
         private bool imagesLoaded = false;
         private bool locationsLoaded = false;
+
+        float globalScale = 0.25f;
 
         public Form1()
         {
@@ -27,7 +36,7 @@ namespace Panorama
         {
             foreach (string myFile in Directory.GetFiles(path, "*.jpg", SearchOption.AllDirectories))
             {
-                images.Add((Path.GetFileNameWithoutExtension(myFile), Image.FromFile(myFile)));
+                images.Add((Path.GetFileNameWithoutExtension(myFile), System.Drawing.Image.FromFile(myFile)));
             }
             imagesLoaded = true;
         }
@@ -58,6 +67,7 @@ namespace Panorama
 
                                 string name = objectNode.Attributes?["name"]?.Value ?? "Unnamed";
                                 float z = float.Parse(objectNode.Attributes?["z"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                
 
                                 XmlNode firstPoint = null;
                                 foreach (XmlNode child in objectNode.ChildNodes)
@@ -73,8 +83,9 @@ namespace Panorama
 
                                 float x = float.Parse(firstPoint.Attributes?["x"]?.Value ?? "0", CultureInfo.InvariantCulture);
                                 float y = float.Parse(firstPoint.Attributes?["y"]?.Value ?? "0", CultureInfo.InvariantCulture);
+                                float viewfield = float.Parse(objectNode.Attributes["viewfield"]?.Value ?? "0.4", CultureInfo.InvariantCulture);
 
-                                Locations.Add((name, x, y, z));
+                                Locations.Add((name, x, y, z, viewfield));
                             }
                         }
                     }
@@ -88,57 +99,105 @@ namespace Panorama
             }
         }
 
-        private Bitmap AssembleCompositeImage()
+        private SixLabors.ImageSharp.Image<Rgba32> AssembleImageSharp(string outputPath)
         {
             if (images.Count == 0 || Locations.Count == 0)
-                throw new InvalidOperationException("Images or locations are not loaded.");
+                throw new InvalidOperationException("Images or locations not loaded.");
 
-            // Match images and their locations by name
-            var nameToImage = images.ToDictionary(i => i.Item1, i => i.Item2);
+            var nameToImage = images.ToDictionary(i => Path.GetFileNameWithoutExtension(i.Item1), i => i.Item2);
 
-            // Find bounds for the canvas
-            float maxX = 0, maxY = 0;
+            // === STEP 1: Determine global scale from one valid image ===
+            float scale = -1;
             foreach (var loc in Locations)
             {
-                if (nameToImage.TryGetValue(loc.name, out var img))
+                if (nameToImage.TryGetValue(loc.name, out var img) && img != null && loc.viewfield > 0)
                 {
-                    float right = loc.x + img.Width;
-                    float bottom = loc.y + img.Height;
-
-                    if (right > maxX) maxX = right;
-                    if (bottom > maxY) maxY = bottom;
+                    float fov_um = loc.viewfield * 1000f;
+                    scale = img.Width / fov_um; // pixels per micron
+                    break;
                 }
             }
 
-            int canvasWidth = (int)Math.Ceiling(maxX);
-            int canvasHeight = (int)Math.Ceiling(maxY);
-            Bitmap canvas = new Bitmap(canvasWidth, canvasHeight);
+            if (scale <= 0)
+                throw new Exception("Could not determine valid scale from image viewfield.");
 
-            using (Graphics g = Graphics.FromImage(canvas))
+            // === STEP 2: Determine bounds in microns ===
+            float minX_um = Locations.Min(loc => loc.x * 1000);
+            float minY_um = Locations.Min(loc => loc.y * 1000);
+            float maxX_px = 0, maxY_px = 0;
+
+            foreach (var loc in Locations)
             {
-                g.Clear(Color.Black); // or Color.Transparent
+                if (!nameToImage.TryGetValue(loc.name, out var img) || img == null)
+                    continue;
 
-                foreach (var loc in Locations)
-                {
-                    if (nameToImage.TryGetValue(loc.name, out var img))
-                    {
-                        g.DrawImage(img, loc.x, loc.y);
-                    }
-                }
+                float x_um = (loc.x * 1000) - minX_um;
+                float y_um = (loc.y * 1000) - minY_um;
+
+                float x_px = x_um * scale;
+                float y_px = y_um * scale;
+
+                maxX_px = Math.Max(maxX_px, x_px + img.Width);
+                maxY_px = Math.Max(maxY_px, y_px + img.Height);
             }
 
+            int origCanvasWidth = (int)Math.Ceiling(maxX_px);
+            int origCanvasHeight = (int)Math.Ceiling(maxY_px);
+
+            // === STEP 3: Adaptive scale to avoid memory error ===
+            long totalPixels = (long)origCanvasWidth * origCanvasHeight;
+            long maxSafePixels = 16000L * 16000L; // ~1 billion pixels (4GB max)
+
+            float safeScale = totalPixels > maxSafePixels
+                ? (float)Math.Sqrt((double)maxSafePixels / totalPixels)
+                : 1.0f;
+
+            int canvasWidth = (int)(origCanvasWidth * safeScale);
+            int canvasHeight = (int)(origCanvasHeight * safeScale);
+
+            float finalScale = scale * safeScale; // combine physical→pixel and downscale
+
+            var canvas = new SixLabors.ImageSharp.Image<Rgba32>(
+                canvasWidth, canvasHeight, SixLabors.ImageSharp.Color.Black);
+
+            // === STEP 4: Draw tiles with adjusted scale ===
+            foreach (var loc in Locations)
+            {
+                if (!nameToImage.TryGetValue(loc.name, out var sysImg) || sysImg == null)
+                    continue;
+
+                using var ms = new MemoryStream();
+                sysImg.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Seek(0, SeekOrigin.Begin);
+                using var tile = SixLabors.ImageSharp.Image.Load<Rgba32>(ms);
+
+                float x_um = (loc.x * 1000) - minX_um;
+                float y_um = (loc.y * 1000) - minY_um;
+
+                float x_px = x_um * finalScale;
+                float y_px = y_um * finalScale;
+
+                var resized = tile.Clone(ctx => ctx.Resize(
+                    (int)(tile.Width * safeScale),
+                    (int)(tile.Height * safeScale)));
+
+                canvas.Mutate(ctx => ctx.DrawImage(resized, new SixLabors.ImageSharp.Point((int)x_px, (int)y_px), 1f));
+            }
+
+            canvas.Save(outputPath, new JpegEncoder { Quality = 95 });
             return canvas;
         }
 
+
+
+
+
+
         private void OnDataReady()
         {
-            Bitmap assembled = AssembleCompositeImage();
+            AssembleImageSharp("assembled_output.jpg");
 
-            pictureBox1.Image?.Dispose(); // dispose previous image to free memory
-            pictureBox1.Image = assembled;
-            pictureBox1.Size = assembled.Size; // important for scrollbars to appear
-
-            MessageBox.Show("Composite image assembled.");
+            MessageBox.Show("Composite image assembled and saved.");
         }
 
         private void CheckIfDataReady()
