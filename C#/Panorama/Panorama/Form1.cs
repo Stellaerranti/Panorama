@@ -121,9 +121,11 @@ namespace Panorama
             if (scale <= 0)
                 throw new Exception("Could not determine valid scale from image viewfield.");
 
-            // === STEP 2: Determine bounds in microns ===
+            // === STEP 2: Determine spatial bounds in microns ===
             float minX_um = Locations.Min(loc => loc.x * 1000);
+            float maxX_um = Locations.Max(loc => loc.x * 1000);
             float minY_um = Locations.Min(loc => loc.y * 1000);
+
             float maxX_px = 0, maxY_px = 0;
 
             foreach (var loc in Locations)
@@ -131,10 +133,10 @@ namespace Panorama
                 if (!nameToImage.TryGetValue(loc.name, out var img) || img == null)
                     continue;
 
-                float x_um = (loc.x * 1000) - minX_um;
+                float x_um_flipped = maxX_um - (loc.x * 1000); // ✅ X flipped
                 float y_um = (loc.y * 1000) - minY_um;
 
-                float x_px = x_um * scale;
+                float x_px = x_um_flipped * scale;
                 float y_px = y_um * scale;
 
                 maxX_px = Math.Max(maxX_px, x_px + img.Width);
@@ -144,9 +146,9 @@ namespace Panorama
             int origCanvasWidth = (int)Math.Ceiling(maxX_px);
             int origCanvasHeight = (int)Math.Ceiling(maxY_px);
 
-            // === STEP 3: Adaptive scale to avoid memory error ===
+            // === STEP 3: Adaptive downscaling if needed ===
             long totalPixels = (long)origCanvasWidth * origCanvasHeight;
-            long maxSafePixels = 16000L * 16000L; // ~1 billion pixels (4GB max)
+            long maxSafePixels = 16000L * 16000L; // ~1 billion pixels
 
             float safeScale = totalPixels > maxSafePixels
                 ? (float)Math.Sqrt((double)maxSafePixels / totalPixels)
@@ -155,12 +157,12 @@ namespace Panorama
             int canvasWidth = (int)(origCanvasWidth * safeScale);
             int canvasHeight = (int)(origCanvasHeight * safeScale);
 
-            float finalScale = scale * safeScale; // combine physical→pixel and downscale
+            float finalScale = scale * safeScale;
 
             var canvas = new SixLabors.ImageSharp.Image<Rgba32>(
                 canvasWidth, canvasHeight, SixLabors.ImageSharp.Color.Black);
 
-            // === STEP 4: Draw tiles with adjusted scale ===
+            // === STEP 4: Draw all tiles ===
             foreach (var loc in Locations)
             {
                 if (!nameToImage.TryGetValue(loc.name, out var sysImg) || sysImg == null)
@@ -171,10 +173,10 @@ namespace Panorama
                 ms.Seek(0, SeekOrigin.Begin);
                 using var tile = SixLabors.ImageSharp.Image.Load<Rgba32>(ms);
 
-                float x_um = (loc.x * 1000) - minX_um;
+                float x_um_flipped = maxX_um - (loc.x * 1000);
                 float y_um = (loc.y * 1000) - minY_um;
 
-                float x_px = x_um * finalScale;
+                float x_px = x_um_flipped * finalScale;
                 float y_px = y_um * finalScale;
 
                 var resized = tile.Clone(ctx => ctx.Resize(
@@ -187,6 +189,7 @@ namespace Panorama
             canvas.Save(outputPath, new JpegEncoder { Quality = 95 });
             return canvas;
         }
+
 
 
 
