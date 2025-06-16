@@ -190,12 +190,6 @@ namespace Panorama
             return canvas;
         }
 
-
-
-
-
-
-
         private void OnDataReady()
         {
             AssembleImageSharp("assembled_output.jpg");
