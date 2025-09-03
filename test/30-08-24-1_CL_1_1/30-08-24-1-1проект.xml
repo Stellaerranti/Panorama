@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<SnapperProject>
+    <OutputDir>D:/CL_Институт_Карпинского_2025/30-08-24-1_CL_1_1</OutputDir>
+    <Autosignal>0</Autosignal>
+    <Autofocus>0</Autofocus>
+    <Panorama size="98" shadingCorrection="0" type="1" maxWidth="41997"></Panorama>
+    <Image filetype="3" height="0" infobar="1" width="0"></Image>
+    <Detectors columnType="0" columnIndex="0">
+        <Mixer secondDetector="SE" add="1" fistDetector="CL" ratio="0.5" enabled="0"></Mixer>
+        <Detector>CL</Detector>
+    </Detectors>
+    <Detectors columnType="2" columnIndex="0">
+        <Mixer secondDetector="" add="1" fistDetector="" ratio="0.5" enabled="0"></Mixer>
+    </Detectors>
+    <Objects columnType="0" columnIndex="0">
+        <Object viewfield="0.4" overlapping="10" wd="20.903586" name="Capture1" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.63498287" y="11.513234"/>
+            <Point x="0.3835177" y="11.742132"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.903586" name="Capture2" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.62638577" y="12.057001"/>
+            <Point x="0.30077062" y="12.23754"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.903586" name="Capture3" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.56835534" y="11.785118"/>
+            <Point x="0.25456121" y="12.010792"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.903586" name="Capture4" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.19330688" y="11.680878"/>
+            <Point x="0.029961987" y="11.95706"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture5" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="2.1636755" y="13.172974"/>
+            <Point x="1.8470333" y="13.379191"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture6" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="1.8177638" y="13.196922"/>
+            <Point x="1.6075559" y="13.449703"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture7" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="2.3086924" y="13.428417"/>
+            <Point x="2.0625629" y="13.68652"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture8" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="2.0465977" y="13.355243"/>
+            <Point x="1.7605553" y="13.677207"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture9" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="2.2900663" y="13.953936"/>
+            <Point x="1.8683201" y="13.643946"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture10" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="1.7898248" y="13.493608"/>
+            <Point x="1.5982429" y="13.944623"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture11" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.1204025" y="13.145969"/>
+            <Point x="0.46794064" y="13.473327"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture12" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.70449079" y="13.129152"/>
+            <Point x="0.42758137" y="13.574225"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture13" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.74597115" y="13.563014"/>
+            <Point x="0.56211226" y="13.81526"/>
+        </Object>
+        <Object viewfield="0.4" overlapping="10" wd="20.934911" name="Capture14" type="0" filename="30-08-24-1-1" z="42.246016">
+            <Point x="0.43542901" y="13.497991"/>
+            <Point x="0.13049232" y="13.855619"/>
+        </Object>
+    </Objects>
+</SnapperProject>

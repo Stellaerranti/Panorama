@@ -24,6 +24,8 @@ namespace Panorama
 
     public partial class Form1 : Form
     {
+
+
         private string imageFolderPath = string.Empty;
         private string coordFilePath = string.Empty;
 
@@ -130,31 +132,31 @@ namespace Panorama
 
                                 string name = objectNode.Attributes?["name"]?.Value ?? "Unnamed";
                                 float z = float.Parse(objectNode.Attributes?["z"]?.Value ?? "0", CultureInfo.InvariantCulture);
-
-
-                                XmlNode firstPoint = null;
-                                foreach (XmlNode child in objectNode.ChildNodes)
-                                {
-                                    if (child.Name.Equals("Point", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        firstPoint = child;
-                                        break;
-                                    }
-                                }
-
-                                if (firstPoint == null) continue;
-
-                                float x = float.Parse(firstPoint.Attributes?["x"]?.Value ?? "0", CultureInfo.InvariantCulture);
-                                float y = float.Parse(firstPoint.Attributes?["y"]?.Value ?? "0", CultureInfo.InvariantCulture);
                                 float viewfield = float.Parse(objectNode.Attributes["viewfield"]?.Value ?? "0.4", CultureInfo.InvariantCulture);
+
+                                // Use the average of ALL <Point> nodes as the tile CENTER.
+                                var pointNodes = objectNode.SelectNodes("Point");
+                                if (pointNodes == null || pointNodes.Count == 0) continue;
+
+                                float sx = 0f, sy = 0f; int cnt = 0;
+                                foreach (XmlNode pn in pointNodes)
+                                {
+                                    if (pn.Attributes?["x"] == null || pn.Attributes?["y"] == null) continue;
+                                    sx += float.Parse(pn.Attributes["x"].Value, CultureInfo.InvariantCulture);
+                                    sy += float.Parse(pn.Attributes["y"].Value, CultureInfo.InvariantCulture);
+                                    cnt++;
+                                }
+                                if (cnt == 0) continue;
+
+                                float x = sx / cnt;
+                                float y = sy / cnt;
 
                                 Locations.Add((name, x, y, z, viewfield));
                             }
                         }
                     }
                 }
-                locationsLoaded = true;
-                //MessageBox.Show($"Successfully loaded {Locations.Count} coordinates");
+                locationsLoaded = Locations.Count > 0;
             }
             catch (Exception ex)
             {
@@ -163,120 +165,119 @@ namespace Panorama
         }
 
         private SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>
-        AssembleImageSharp(string outputPath, IProgress<int> progress = null)
+AssembleImageSharp(string outputPath, IProgress<int> progress = null)
         {
             if (images.Count == 0 || Locations.Count == 0)
                 throw new InvalidOperationException("Images or locations not loaded.");
 
-            // Keying parameters
-            byte bgThreshold = 24;         // raise if background isn’t pure black (e.g., 32–48)
-            float maskFeatherSigma = 0.8f; // 0..1.2 typical feather
+            // Use your field defaults
+            byte bgThresholdLocal = bgThreshold;
+            float featherSigmaLocal = maskFeatherSigma;
 
-            // Case-insensitive name→path map
+            // name -> path
             var nameToPath = images.ToDictionary(i => i.name, i => i.path, StringComparer.OrdinalIgnoreCase);
 
-            // ----- Determine pixel scale (px/µm) from first valid tile -----
+            // Determine px/µm scale from first valid tile (width pixels / viewfield µm)
             float scalePxPerUm = -1f;
             foreach (var loc in Locations)
             {
                 if (loc.viewfield <= 0) continue;
-                if (!nameToPath.TryGetValue(loc.name, out var path) || !File.Exists(path)) continue;
+                if (!nameToPath.TryGetValue(loc.name, out var pth) || !File.Exists(pth)) continue;
 
-                int widthPx;
-                var info = SixLabors.ImageSharp.Image.Identify(path);
-                if (info != null) widthPx = info.Width;
-                else { using var tmp = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(path); widthPx = tmp.Width; }
+                int w;
+                var info = SixLabors.ImageSharp.Image.Identify(pth);
+                if (info != null) w = info.Width;
+                else { using var tmp = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(pth); w = tmp.Width; }
 
-                float fov_um = loc.viewfield * 1000f; // mm → µm
-                if (fov_um > 0) { scalePxPerUm = widthPx / fov_um; break; }
+                float fov_um = loc.viewfield * 1000f; // mm -> µm
+                if (fov_um > 0) { scalePxPerUm = w / fov_um; break; }
             }
-            if (scalePxPerUm <= 0) throw new Exception("Could not determine scale from any image's viewfield.");
+            if (scalePxPerUm <= 0) throw new Exception("Could not determine px/µm scale from any image's viewfield.");
 
-            // ----- Compute bounds in pixels -----
-            float minY_um_all = Locations.Min(l => l.y * 1000f);
-            float maxX_um_all = Locations.Max(l => l.x * 1000f);
+            // Precompute physical rects (µm) for each tile using CENTER from Locations
+            var tiles = new List<(string path, int w, int h, float left_um, float top_um, float right_um, float bottom_um)>();
 
-            float maxX_px_needed = 0f, maxY_px_needed = 0f;
+            float minLeft_um = float.PositiveInfinity, minTop_um = float.PositiveInfinity;
+            float maxRight_um = float.NegativeInfinity, maxBottom_um = float.NegativeInfinity;
 
             foreach (var loc in Locations)
             {
-                if (!nameToPath.TryGetValue(loc.name, out var path) || !File.Exists(path)) continue;
+                if (!nameToPath.TryGetValue(loc.name, out var pth) || !File.Exists(pth)) continue;
 
                 int w, h;
-                var info = SixLabors.ImageSharp.Image.Identify(path);
+                var info = SixLabors.ImageSharp.Image.Identify(pth);
                 if (info != null) { w = info.Width; h = info.Height; }
-                else { using var tmpSz = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(path); w = tmpSz.Width; h = tmpSz.Height; }
+                else { using var tmp = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(pth); w = tmp.Width; h = tmp.Height; }
 
-                float x_um_flipped = maxX_um_all - (loc.x * 1000f);
-                float y_um = (loc.y * 1000f) - minY_um_all;
+                float cx_um = loc.x * 1000f;
+                float cy_um = loc.y * 1000f;
 
-                float x_px = x_um_flipped * scalePxPerUm;
-                float y_px = y_um * scalePxPerUm;
+                float width_um = w / scalePxPerUm;   // should equal viewfield (µm)
+                float height_um = h / scalePxPerUm;   // honors aspect ratio
 
-                maxX_px_needed = Math.Max(maxX_px_needed, x_px + w);
-                maxY_px_needed = Math.Max(maxY_px_needed, y_px + h);
+                float left_um = cx_um - 0.5f * width_um;
+                float top_um = cy_um - 0.5f * height_um;
+                float right_um = left_um + width_um;
+                float bottom_um = top_um + height_um;
+
+                tiles.Add((pth, w, h, left_um, top_um, right_um, bottom_um));
+
+                if (left_um < minLeft_um) minLeft_um = left_um;
+                if (top_um < minTop_um) minTop_um = top_um;
+                if (right_um > maxRight_um) maxRight_um = right_um;
+                if (bottom_um > maxBottom_um) maxBottom_um = bottom_um;
             }
+            if (tiles.Count == 0) throw new Exception("No tiles found for the provided XML/image set.");
 
-            int origW = Math.Max(1, (int)Math.Ceiling(maxX_px_needed));
-            int origH = Math.Max(1, (int)Math.Ceiling(maxY_px_needed));
+            // Canvas size (in px)
+            float totalWidth_um = maxRight_um - minLeft_um;
+            float totalHeight_um = maxBottom_um - minTop_um;
 
-            // ----- Safety downscale for huge canvases -----
+            int origW = Math.Max(1, (int)Math.Ceiling(totalWidth_um * scalePxPerUm));
+            int origH = Math.Max(1, (int)Math.Ceiling(totalHeight_um * scalePxPerUm));
+
+            // Safety downscale for very large canvases
             long totalPx = (long)origW * origH;
-            const long maxSafePx = 16000L * 16000L; // ~256 MPix cap (adjust if needed)
+            const long maxSafePx = 16000L * 16000L;
             float safeScale = totalPx > maxSafePx ? (float)Math.Sqrt((double)maxSafePx / totalPx) : 1f;
 
             int W = Math.Max(1, (int)(origW * safeScale));
             int H = Math.Max(1, (int)(origH * safeScale));
             float finalScalePxPerUm = scalePxPerUm * safeScale;
 
-            // ----- Create canvas -----
             var canvas = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(
                 W, H, SixLabors.ImageSharp.Color.Black);
 
-            // ----- Composite tiles -----
-            int processed = 0;
-            int total = Locations.Count;
+            int processed = 0, total = tiles.Count;
 
-            foreach (var loc in Locations)
+            foreach (var t in tiles)
             {
-                if (!nameToPath.TryGetValue(loc.name, out var path) || !File.Exists(path))
-                {
-                    // still report to keep pace if you want; or skip
-                    processed++;
-                    progress?.Report(processed);
-                    continue;
-                }
-
-                using var tile = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(path);
-
-                using (var mask = BuildAlphaMask(tile, bgThreshold, maskFeatherSigma))
-                {
+                using var tile = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(t.path);
+                using (var mask = BuildAlphaMask(tile, bgThresholdLocal, featherSigmaLocal))
                     ApplyAlphaMask(tile, mask);
-                }
 
-                int newW = Math.Max(1, (int)(tile.Width * safeScale));
-                int newH = Math.Max(1, (int)(tile.Height * safeScale));
+                int newW = Math.Max(1, (int)(t.w * safeScale));
+                int newH = Math.Max(1, (int)(t.h * safeScale));
                 using var resized = tile.Clone(ctx => ctx.Resize(newW, newH, SixLabors.ImageSharp.Processing.KnownResamplers.Bicubic));
 
-                float x_um_flipped = maxX_um_all - (loc.x * 1000f);
-                float y_um = (loc.y * 1000f) - minY_um_all;
+                // If stage X is mirrored relative to image X, anchor by RIGHT edge:
+                int x_px = (int)((maxRight_um - t.right_um) * finalScalePxPerUm);
+                int y_px = (int)((t.top_um - minTop_um) * finalScalePxPerUm);
 
-                int x_px = (int)(x_um_flipped * finalScalePxPerUm);
-                int y_px = (int)(y_um * finalScalePxPerUm);
+                // If NOT mirrored, use this instead:
+                // int x_px = (int)((t.left_um - minLeft_um) * finalScalePxPerUm);
 
                 canvas.Mutate(ctx => ctx.DrawImage(resized, new SixLabors.ImageSharp.Point(x_px, y_px), 1f));
 
-                // report after placing each tile
                 processed++;
                 progress?.Report(processed);
             }
 
-            // ----- Save -----
             var encoder = PickEncoderForPath(outputPath);
             canvas.Save(outputPath, encoder);
-
             return canvas;
         }
+
 
         // Builds an alpha mask where near-black becomes transparent (0), bright = opaque (255)
         private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
@@ -367,7 +368,9 @@ namespace Panorama
                 // Run heavy work off the UI thread
                 await Task.Run(() => AssembleImageSharp(outputFilePath, progress).Dispose());
 
+                // Inform + clear old inputs
                 MessageBox.Show($"Composite image assembled and saved:\n{outputFilePath}");
+                ClearLoadedData(clearOutputPath: false);
             }
             catch (Exception ex)
             {
@@ -387,6 +390,25 @@ namespace Panorama
             {
                 OnDataReady();
             }
+        }
+
+        private void ClearLoadedData(bool clearOutputPath = false)
+        {
+            // Clear data
+            images.Clear();
+            Locations.Clear();
+
+            // Reset paths
+            imageFolderPath = string.Empty;
+            coordFilePath = string.Empty;
+
+            // Reset flags
+            imagesLoaded = false;
+            locationsLoaded = false;
+
+            // Optionally reset output file path
+            if (clearOutputPath)
+                outputFilePath = string.Empty;
         }
 
 

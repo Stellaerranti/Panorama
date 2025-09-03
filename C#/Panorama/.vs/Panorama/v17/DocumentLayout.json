@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{7ED83E57-E666-4720-B32D-B8814530BFAD}|Panorama\\Panorama.csproj|solutionrelative:panorama\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7ED83E57-E666-4720-B32D-B8814530BFAD}|Panorama\\Panorama.csproj|c:\\users\\\u0434\u043C\u0438\u0442\u0440\u0438\u0439\\documents\\github\\panorama\\c#\\panorama\\panorama\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{7ED83E57-E666-4720-B32D-B8814530BFAD}|Panorama\\Panorama.csproj|C:\\Users\\\u0414\u043C\u0438\u0442\u0440\u0438\u0439\\Documents\\GitHub\\Panorama\\C#\\Panorama\\panorama\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{7ED83E57-E666-4720-B32D-B8814530BFAD}|Panorama\\Panorama.csproj|solutionrelative:panorama\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "Panorama\\Form1.cs",
               "ToolTip": "C:\\Users\\\u0414\u043C\u0438\u0442\u0440\u0438\u0439\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Form1.cs",
               "RelativeToolTip": "Panorama\\Form1.cs",
-              "ViewState": "AQIAAEABAAAAAAAAAAAuwH0BAAAJAAAA",
+              "ViewState": "AQIAANwAAAAAAAAAAAAcwBcBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-28T15:27:58.847Z",
               "EditorCaption": ""
@@ -42,8 +42,7 @@
               "ToolTip": "C:\\Users\\\u0414\u043C\u0438\u0442\u0440\u0438\u0439\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435]",
               "RelativeToolTip": "Panorama\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-03T20:47:14.537Z",
-              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435]"
+              "WhenOpened": "2025-09-03T20:47:14.537Z"
             }
           ]
         }
