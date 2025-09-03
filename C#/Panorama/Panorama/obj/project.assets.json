@@ -119,5 +119,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "У пакета \"SixLabors.ImageSharp\" 3.1.10 есть известная уязвимость https://github.com/advisories/GHSA-rxmq-m78w-7wmc (уровень серьезности: средний уровень)",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net8.0-windows7.0"
+      ]
+    }
+  ]
 }

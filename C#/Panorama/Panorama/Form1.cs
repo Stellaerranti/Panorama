@@ -45,6 +45,8 @@ namespace Panorama
 
         float globalScale = 0.25f;
 
+        private float overlapFraction = 0f;
+
         public Form1()
         {
             InitializeComponent();
@@ -145,6 +147,15 @@ namespace Panorama
                                     sx += float.Parse(pn.Attributes["x"].Value, CultureInfo.InvariantCulture);
                                     sy += float.Parse(pn.Attributes["y"].Value, CultureInfo.InvariantCulture);
                                     cnt++;
+
+                                    if (overlapFraction == 0f && objectNode.Attributes?["overlapping"] != null)
+                                    {
+                                        if (float.TryParse(objectNode.Attributes["overlapping"].Value,
+                                                           NumberStyles.Float, CultureInfo.InvariantCulture, out var ov))
+                                        {
+                                            overlapFraction = ov > 1f ? ov / 100f : ov; // "10" -> 0.10
+                                        }
+                                    }
                                 }
                                 if (cnt == 0) continue;
 
@@ -165,20 +176,23 @@ namespace Panorama
         }
 
         private SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>
-AssembleImageSharp(string outputPath, IProgress<int> progress = null)
+        AssembleImageSharp(string outputPath, IProgress<int> progress = null)
         {
-            if (images.Count == 0 || Locations.Count == 0)
-                throw new InvalidOperationException("Images or locations not loaded.");
+            if (images == null || images.Count == 0)
+                throw new InvalidOperationException("No images loaded.");
+            if (Locations == null || Locations.Count == 0)
+                throw new InvalidOperationException("No locations loaded.");
 
-            // Use your field defaults
+            // You can force a choice if you like; otherwise the code will auto-pick below.
+            bool preferMirroredX = true; // set to false if your stage is not mirrored
+
             byte bgThresholdLocal = bgThreshold;
             float featherSigmaLocal = maskFeatherSigma;
 
-            // name -> path
             var nameToPath = images.ToDictionary(i => i.name, i => i.path, StringComparer.OrdinalIgnoreCase);
 
-            // Determine px/µm scale from first valid tile (width pixels / viewfield µm)
-            float scalePxPerUm = -1f;
+            // ---- 1) px/µm scale from full FOV (ignore overlap for scale) ----
+            double scalePxPerUm = -1;
             foreach (var loc in Locations)
             {
                 if (loc.viewfield <= 0) continue;
@@ -189,16 +203,16 @@ AssembleImageSharp(string outputPath, IProgress<int> progress = null)
                 if (info != null) w = info.Width;
                 else { using var tmp = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(pth); w = tmp.Width; }
 
-                float fov_um = loc.viewfield * 1000f; // mm -> µm
+                double fov_um = loc.viewfield * 1000.0; // mm -> µm
                 if (fov_um > 0) { scalePxPerUm = w / fov_um; break; }
             }
-            if (scalePxPerUm <= 0) throw new Exception("Could not determine px/µm scale from any image's viewfield.");
+            if (scalePxPerUm <= 0)
+                throw new Exception("Could not determine px/µm scale from any image/viewfield.");
 
-            // Precompute physical rects (µm) for each tile using CENTER from Locations
-            var tiles = new List<(string path, int w, int h, float left_um, float top_um, float right_um, float bottom_um)>();
-
-            float minLeft_um = float.PositiveInfinity, minTop_um = float.PositiveInfinity;
-            float maxRight_um = float.NegativeInfinity, maxBottom_um = float.NegativeInfinity;
+            // ---- 2) Build tile rects (µm) using CENTER coords ----
+            var tiles = new List<(string path, int w, int h, double left_um, double top_um, double right_um, double bottom_um)>();
+            double minLeft_um = double.PositiveInfinity, minTop_um = double.PositiveInfinity;
+            double maxRight_um = double.NegativeInfinity, maxBottom_um = double.NegativeInfinity;
 
             foreach (var loc in Locations)
             {
@@ -209,16 +223,16 @@ AssembleImageSharp(string outputPath, IProgress<int> progress = null)
                 if (info != null) { w = info.Width; h = info.Height; }
                 else { using var tmp = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(pth); w = tmp.Width; h = tmp.Height; }
 
-                float cx_um = loc.x * 1000f;
-                float cy_um = loc.y * 1000f;
+                double cx_um = loc.x * 1000.0;
+                double cy_um = loc.y * 1000.0;
 
-                float width_um = w / scalePxPerUm;   // should equal viewfield (µm)
-                float height_um = h / scalePxPerUm;   // honors aspect ratio
+                double width_um = w / scalePxPerUm;
+                double height_um = h / scalePxPerUm;
 
-                float left_um = cx_um - 0.5f * width_um;
-                float top_um = cy_um - 0.5f * height_um;
-                float right_um = left_um + width_um;
-                float bottom_um = top_um + height_um;
+                double left_um = cx_um - 0.5 * width_um;
+                double top_um = cy_um - 0.5 * height_um;
+                double right_um = left_um + width_um;
+                double bottom_um = top_um + height_um;
 
                 tiles.Add((pth, w, h, left_um, top_um, right_um, bottom_um));
 
@@ -227,45 +241,77 @@ AssembleImageSharp(string outputPath, IProgress<int> progress = null)
                 if (right_um > maxRight_um) maxRight_um = right_um;
                 if (bottom_um > maxBottom_um) maxBottom_um = bottom_um;
             }
-            if (tiles.Count == 0) throw new Exception("No tiles found for the provided XML/image set.");
+            if (tiles.Count == 0)
+                throw new Exception("No tiles found that match the XML Locations.");
 
-            // Canvas size (in px)
-            float totalWidth_um = maxRight_um - minLeft_um;
-            float totalHeight_um = maxBottom_um - minTop_um;
+            // Mirror axis = mosaic midline (this keeps mirrored coords inside the same bounds)
+            double mirrorAxis_um = (minLeft_um + maxRight_um) / 2.0;
+
+            // ---- 3) Canvas size + safety downscale ----
+            double totalWidth_um = maxRight_um - minLeft_um;
+            double totalHeight_um = maxBottom_um - minTop_um;
 
             int origW = Math.Max(1, (int)Math.Ceiling(totalWidth_um * scalePxPerUm));
             int origH = Math.Max(1, (int)Math.Ceiling(totalHeight_um * scalePxPerUm));
 
-            // Safety downscale for very large canvases
-            long totalPx = (long)origW * origH;
+            long totalPx = (long)origW * (long)origH;
             const long maxSafePx = 16000L * 16000L;
-            float safeScale = totalPx > maxSafePx ? (float)Math.Sqrt((double)maxSafePx / totalPx) : 1f;
+            double safeScale = totalPx > maxSafePx ? Math.Sqrt((double)maxSafePx / totalPx) : 1.0;
 
-            int W = Math.Max(1, (int)(origW * safeScale));
-            int H = Math.Max(1, (int)(origH * safeScale));
-            float finalScalePxPerUm = scalePxPerUm * safeScale;
+            int W = Math.Max(1, (int)Math.Round(origW * safeScale));
+            int H = Math.Max(1, (int)Math.Round(origH * safeScale));
+            double finalScalePxPerUm = scalePxPerUm * safeScale;
 
             var canvas = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(
                 W, H, SixLabors.ImageSharp.Color.Black);
 
+            // ---- 4) Decide orientation (auto-pick) ----
+            // Compute how far tiles would overflow the canvas for both orientations and pick the safer one.
+            Func<bool, double> totalOverflow = mirrored =>
+            {
+                double overflow = 0;
+                foreach (var t in tiles)
+                {
+                    int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
+                    double left_um = mirrored ? (2.0 * mirrorAxis_um - t.right_um) : t.left_um;
+                    int x_px = (int)Math.Round((left_um - minLeft_um) * finalScalePxPerUm);
+                    int leftOverflow = Math.Max(0, -x_px);
+                    int rightOverflow = Math.Max(0, (x_px + newW) - W);
+                    overflow += leftOverflow + rightOverflow;
+                }
+                return overflow;
+            };
+
+            bool useMirroredX;
+            double ovMir = totalOverflow(true);
+            double ovNorm = totalOverflow(false);
+
+            if (ovMir == 0 && ovNorm == 0)
+                useMirroredX = preferMirroredX;    // both fit → respect preference
+            else if (ovMir == 0)
+                useMirroredX = true;               // only mirrored fits
+            else if (ovNorm == 0)
+                useMirroredX = false;              // only normal fits
+            else
+                useMirroredX = ovMir < ovNorm;     // pick the one with less overflow
+
+            // ---- 5) Composite with rounded integer placement ----
             int processed = 0, total = tiles.Count;
 
             foreach (var t in tiles)
             {
                 using var tile = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(t.path);
+
                 using (var mask = BuildAlphaMask(tile, bgThresholdLocal, featherSigmaLocal))
                     ApplyAlphaMask(tile, mask);
 
-                int newW = Math.Max(1, (int)(t.w * safeScale));
-                int newH = Math.Max(1, (int)(t.h * safeScale));
+                int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
+                int newH = Math.Max(1, (int)Math.Round(t.h * safeScale));
                 using var resized = tile.Clone(ctx => ctx.Resize(newW, newH, SixLabors.ImageSharp.Processing.KnownResamplers.Bicubic));
 
-                // If stage X is mirrored relative to image X, anchor by RIGHT edge:
-                int x_px = (int)((maxRight_um - t.right_um) * finalScalePxPerUm);
-                int y_px = (int)((t.top_um - minTop_um) * finalScalePxPerUm);
-
-                // If NOT mirrored, use this instead:
-                // int x_px = (int)((t.left_um - minLeft_um) * finalScalePxPerUm);
+                double left_um = useMirroredX ? (2.0 * mirrorAxis_um - t.right_um) : t.left_um;
+                int x_px = (int)Math.Round((left_um - minLeft_um) * finalScalePxPerUm);
+                int y_px = (int)Math.Round((t.top_um - minTop_um) * finalScalePxPerUm);
 
                 canvas.Mutate(ctx => ctx.DrawImage(resized, new SixLabors.ImageSharp.Point(x_px, y_px), 1f));
 
@@ -273,8 +319,10 @@ AssembleImageSharp(string outputPath, IProgress<int> progress = null)
                 progress?.Report(processed);
             }
 
+            // ---- 6) Save ----
             var encoder = PickEncoderForPath(outputPath);
             canvas.Save(outputPath, encoder);
+
             return canvas;
         }
 
