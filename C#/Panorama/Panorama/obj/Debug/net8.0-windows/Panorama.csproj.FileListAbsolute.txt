@@ -38,3 +38,4 @@ C:\Users\Дмитрий\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug
 C:\Users\Дмитрий\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.pdb
 C:\Users\Дмитрий\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.genruntimeconfig.cache
 C:\Users\Дмитрий\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\ref\Panorama.dll
+C:\Users\Дмитрий\Documents\GitHub\Panorama\C#\Panorama\Panorama\obj\Debug\net8.0-windows\Panorama.Properties.Resources.resources

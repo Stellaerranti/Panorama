@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<SnapperProject>
+    <OutputDir>D:/CL_Институт_Карпинского_2025/30-08-24-1_BSE/1-new</OutputDir>
+    <Autosignal>0</Autosignal>
+    <Autofocus>0</Autofocus>
+    <Panorama size="100" shadingCorrection="0" type="1" maxWidth="42000"></Panorama>
+    <Image filetype="3" height="0" infobar="1" width="0"></Image>
+    <Detectors columnType="0" columnIndex="0">
+        <Mixer secondDetector="SE" add="1" fistDetector="LE BSE" ratio="0.5" enabled="0"></Mixer>
+        <Detector>CL</Detector>
+    </Detectors>
+    <Detectors columnType="2" columnIndex="0">
+        <Mixer secondDetector="" add="1" fistDetector="" ratio="0.5" enabled="0"></Mixer>
+    </Detectors>
+    <Objects columnType="0" columnIndex="0">
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture1" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.2866394" y="-0.28453081"/>
+            <Point x="2.1765017" y="-0.11932429"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture2" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.1082474" y="-0.36131693"/>
+            <Point x="1.8763378" y="-0.16663696"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture3" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.2920687" y="-0.10303633"/>
+            <Point x="2.1726237" y="0.0063257302"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture4" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.1291891" y="-0.123978"/>
+            <Point x="1.9849242" y="0.022613696"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture5" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.3529541" y="0.024550877"/>
+            <Point x="2.2017087" y="0.12150306"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture6" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.1043663" y="0.051306248"/>
+            <Point x="1.825144" y="0.18548806"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture7" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="2.0686879" y="0.2095322"/>
+            <Point x="1.7902412" y="0.32897729"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture8" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="1.9352797" y="-0.11157499"/>
+            <Point x="1.5699638" y="0.052080287"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture9" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="1.8321225" y="-0.34813831"/>
+            <Point x="1.5800469" y="-0.13251666"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture10" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="1.799543" y="0.064487686"/>
+            <Point x="1.6258047" y="0.2607189"/>
+        </Object>
+        <Object viewfield="0.2" overlapping="10" wd="19.762449" name="Capture11" type="0" filename="Панорама LE BSE" z="41.075147">
+            <Point x="1.7817038" y="0.26925069"/>
+            <Point x="1.5273013" y="0.39645195"/>
+        </Object>
+    </Objects>
+</SnapperProject>

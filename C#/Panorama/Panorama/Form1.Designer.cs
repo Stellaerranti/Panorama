@@ -32,8 +32,10 @@
             toolStrip = new ToolStrip();
             toolStripButton_imageFolder = new ToolStripButton();
             toolStripButton_LockationFile = new ToolStripButton();
+            saveOutput = new ToolStripButton();
             panel1 = new Panel();
             pictureBox1 = new PictureBox();
+            toolStripProgressBar1 = new ToolStripProgressBar();
             toolStrip.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -41,7 +43,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton_imageFolder, toolStripButton_LockationFile });
+            toolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton_imageFolder, toolStripButton_LockationFile, saveOutput, toolStripProgressBar1 });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(445, 25);
@@ -68,6 +70,16 @@
             toolStripButton_LockationFile.Text = "XML file";
             toolStripButton_LockationFile.Click += toolStripButton_LockationFile_Click;
             // 
+            // saveOutput
+            // 
+            saveOutput.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            saveOutput.Image = (Image)resources.GetObject("saveOutput.Image");
+            saveOutput.ImageTransparentColor = Color.Magenta;
+            saveOutput.Name = "saveOutput";
+            saveOutput.Size = new Size(35, 22);
+            saveOutput.Text = "Save";
+            saveOutput.Click += saveOutput_Click;
+            // 
             // panel1
             // 
             panel1.AutoScroll = true;
@@ -86,6 +98,11 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
+            // 
+            // toolStripProgressBar1
+            // 
+            toolStripProgressBar1.Name = "toolStripProgressBar1";
+            toolStripProgressBar1.Size = new Size(100, 22);
             // 
             // Form1
             // 
@@ -111,5 +128,7 @@
         private ToolStripButton toolStripButton_LockationFile;
         private Panel panel1;
         private PictureBox pictureBox1;
+        private ToolStripButton saveOutput;
+        private ToolStripProgressBar toolStripProgressBar1;
     }
 }
