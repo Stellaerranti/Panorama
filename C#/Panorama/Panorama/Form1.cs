@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -389,6 +390,192 @@ namespace Panorama
             };
         }
 
+        private static string ToBase64Png(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img)
+        {
+            using var ms = new MemoryStream();
+            var png = new SixLabors.ImageSharp.Formats.Png.PngEncoder(); // use defaults (keeps alpha)
+            img.Save(ms, png);
+            return Convert.ToBase64String(ms.ToArray());
+        }
+
+        private void AssembleSvg(string outputPath, IProgress<int> progress = null)
+        {
+            if (images == null || images.Count == 0)
+                throw new InvalidOperationException("No images loaded.");
+            if (Locations == null || Locations.Count == 0)
+                throw new InvalidOperationException("No locations loaded.");
+
+            // ---- Settings ----
+            const bool EMBED = true; // set to false to link external PNGs next to the SVG
+            bool preferMirroredX = true;
+
+            byte bgThresholdLocal = bgThreshold;
+            float featherSigmaLocal = maskFeatherSigma;
+
+            var nameToPath = images.ToDictionary(i => i.name, i => i.path, StringComparer.OrdinalIgnoreCase);
+
+            // ---- 1) px/µm scale from full FOV ----
+            double scalePxPerUm = -1;
+            foreach (var loc in Locations)
+            {
+                if (loc.viewfield <= 0) continue;
+                if (!nameToPath.TryGetValue(loc.name, out var pth) || !File.Exists(pth)) continue;
+
+                int w;
+                var info = SixLabors.ImageSharp.Image.Identify(pth);
+                if (info != null) w = info.Width;
+                else { using var tmp = SixLabors.ImageSharp.Image.Load<Rgba32>(pth); w = tmp.Width; }
+
+                double fov_um = loc.viewfield * 1000.0; // mm -> µm
+                if (fov_um > 0) { scalePxPerUm = w / fov_um; break; }
+            }
+            if (scalePxPerUm <= 0)
+                throw new Exception("Could not determine px/µm scale from any image/viewfield.");
+
+            // ---- 2) Build tile rects (µm) using CENTER coords ----
+            var tiles = new List<(string name, string path, int w, int h, double left_um, double top_um, double right_um, double bottom_um)>();
+            double minLeft_um = double.PositiveInfinity, minTop_um = double.PositiveInfinity;
+            double maxRight_um = double.NegativeInfinity, maxBottom_um = double.NegativeInfinity;
+
+            foreach (var loc in Locations)
+            {
+                if (!nameToPath.TryGetValue(loc.name, out var pth) || !File.Exists(pth)) continue;
+
+                int w, h;
+                var info = SixLabors.ImageSharp.Image.Identify(pth);
+                if (info != null) { w = info.Width; h = info.Height; }
+                else { using var tmp = SixLabors.ImageSharp.Image.Load<Rgba32>(pth); w = tmp.Width; h = tmp.Height; }
+
+                double cx_um = loc.x * 1000.0;
+                double cy_um = loc.y * 1000.0;
+
+                double width_um = w / scalePxPerUm;
+                double height_um = h / scalePxPerUm;
+
+                double left_um = cx_um - 0.5 * width_um;
+                double top_um = cy_um - 0.5 * height_um;
+                double right_um = left_um + width_um;
+                double bottom_um = top_um + height_um;
+
+                tiles.Add((loc.name, pth, w, h, left_um, top_um, right_um, bottom_um));
+
+                if (left_um < minLeft_um) minLeft_um = left_um;
+                if (top_um < minTop_um) minTop_um = top_um;
+                if (right_um > maxRight_um) maxRight_um = right_um;
+                if (bottom_um > maxBottom_um) maxBottom_um = bottom_um;
+            }
+            if (tiles.Count == 0)
+                throw new Exception("No tiles found that match the XML Locations.");
+
+            // Mirror axis = mosaic midline
+            double mirrorAxis_um = (minLeft_um + maxRight_um) / 2.0;
+
+            // ---- 3) Canvas size + safety downscale ----
+            double totalWidth_um = maxRight_um - minLeft_um;
+            double totalHeight_um = maxBottom_um - minTop_um;
+
+            int origW = Math.Max(1, (int)Math.Ceiling(totalWidth_um * scalePxPerUm));
+            int origH = Math.Max(1, (int)Math.Ceiling(totalHeight_um * scalePxPerUm));
+
+            long totalPx = (long)origW * (long)origH;
+            const long maxSafePx = 16000L * 16000L;
+            double safeScale = totalPx > maxSafePx ? Math.Sqrt((double)maxSafePx / totalPx) : 1.0;
+
+            int W = Math.Max(1, (int)Math.Round(origW * safeScale));
+            int H = Math.Max(1, (int)Math.Round(origH * safeScale));
+            double finalScalePxPerUm = scalePxPerUm * safeScale;
+
+            // ---- 4) Decide orientation (auto-pick) ----
+            Func<bool, double> totalOverflow = mirrored =>
+            {
+                double overflow = 0;
+                foreach (var t in tiles)
+                {
+                    int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
+                    double left_um = mirrored ? (2.0 * mirrorAxis_um - t.right_um) : t.left_um;
+                    int x_px = (int)Math.Round((left_um - minLeft_um) * finalScalePxPerUm);
+                    int leftOverflow = Math.Max(0, -x_px);
+                    int rightOverflow = Math.Max(0, (x_px + newW) - W);
+                    overflow += leftOverflow + rightOverflow;
+                }
+                return overflow;
+            };
+
+            bool useMirroredX;
+            double ovMir = totalOverflow(true);
+            double ovNorm = totalOverflow(false);
+
+            if (ovMir == 0 && ovNorm == 0) useMirroredX = preferMirroredX;
+            else if (ovMir == 0) useMirroredX = true;
+            else if (ovNorm == 0) useMirroredX = false;
+            else useMirroredX = ovMir < ovNorm;
+
+            // ---- 5) Prepare I/O if linking external PNGs ----
+            string svgDir = Path.GetDirectoryName(outputPath) ?? Environment.CurrentDirectory;
+            string tileDir = Path.Combine(svgDir, Path.GetFileNameWithoutExtension(outputPath) + "_tiles");
+            if (!EMBED)
+                Directory.CreateDirectory(tileDir);
+
+            // ---- 6) Build SVG with per-tile <image> elements ----
+            var sb = new StringBuilder();
+
+            // Add both href forms for compatibility (xlink + modern)
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+            sb.AppendLine($"<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"{W}\" height=\"{H}\" viewBox=\"0 0 {W} {H}\">");
+            sb.AppendLine("  <desc>Editable panorama. Each tile is a separate PNG with alpha; move/adjust tiles if needed.</desc>");
+            // background is click-through
+            //sb.AppendLine("  <rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"black\" style=\"pointer-events:none\"/>");
+
+            int processed = 0, total = tiles.Count;
+            foreach (var t in tiles)
+            {
+                using var tile = SixLabors.ImageSharp.Image.Load<Rgba32>(t.path);
+                using (var mask = BuildAlphaMask(tile, bgThresholdLocal, featherSigmaLocal))
+                    ApplyAlphaMask(tile, mask);
+
+                int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
+                int newH = Math.Max(1, (int)Math.Round(t.h * safeScale));
+                using var resized = tile.Clone(ctx => ctx.Resize(newW, newH, KnownResamplers.Bicubic));
+
+                double left_um = useMirroredX ? (2.0 * mirrorAxis_um - t.right_um) : t.left_um;
+                int x_px = (int)Math.Round((left_um - minLeft_um) * finalScalePxPerUm);
+                int y_px = (int)Math.Round((t.top_um - minTop_um) * finalScalePxPerUm);
+
+                string hrefVal;
+                if (EMBED)
+                {
+                    // embed as base64 data URIs
+                    hrefVal = "data:image/png;base64," + ToBase64Png(resized);
+                }
+                else
+                {
+                    // save external PNGs next to the SVG (smaller SVG, still fully editable)
+                    string safeName = string.Join("_", t.name.Split(Path.GetInvalidFileNameChars()));
+                    string tileFile = Path.Combine(tileDir, $"{safeName}_{processed + 1}.png");
+                    using (var fs = File.Open(tileFile, FileMode.Create, FileAccess.Write))
+                    {
+                        resized.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+                    }
+                    hrefVal = Uri.EscapeUriString(Path.Combine(Path.GetFileName(tileDir), Path.GetFileName(tileFile)).Replace('\\', '/'));
+                }
+
+                string id = $"tile_{processed + 1}_{System.Security.Cryptography.SHA1.HashData(Encoding.UTF8.GetBytes(t.name)).Take(4).Aggregate(0, (acc, b) => (acc << 1) ^ b):X}";
+                sb.AppendLine($"  <g id=\"{id}\" data-name=\"{System.Security.SecurityElement.Escape(t.name)}\">");
+                sb.AppendLine($"    <title>{System.Security.SecurityElement.Escape(t.name)}</title>");
+                // Provide both href and xlink:href for compatibility
+                sb.AppendLine($"    <image x=\"{x_px}\" y=\"{y_px}\" width=\"{newW}\" height=\"{newH}\" href=\"{hrefVal}\" xlink:href=\"{hrefVal}\" preserveAspectRatio=\"none\" />");
+                sb.AppendLine("  </g>");
+
+                processed++;
+                progress?.Report(processed);
+            }
+
+            sb.AppendLine("</svg>");
+            File.WriteAllText(outputPath, sb.ToString(), new UTF8Encoding(false));
+        }
+
+
+
         private async void OnDataReady()
         {
             try
@@ -414,7 +601,18 @@ namespace Panorama
                 });
 
                 // Run heavy work off the UI thread
-                await Task.Run(() => AssembleImageSharp(outputFilePath, progress).Dispose());
+                await Task.Run(() =>
+                {
+                    string ext = System.IO.Path.GetExtension(outputFilePath)?.ToLowerInvariant();
+                    if (ext == ".svg")
+                    {
+                        AssembleSvg(outputFilePath, progress);
+                    }
+                    else
+                    {
+                        AssembleImageSharp(outputFilePath, progress).Dispose();
+                    }
+                });
 
                 // Inform + clear old inputs
                 MessageBox.Show($"Composite image assembled and saved:\n{outputFilePath}");
@@ -500,10 +698,10 @@ namespace Panorama
             using (var saveDialog = new SaveFileDialog())
             {
                 saveDialog.Title = "Save Assembled Panorama";
-                saveDialog.Filter = "JPEG Image (*.jpg)|*.jpg|PNG Image (*.png)|*.png|TIFF Image (*.tif)|*.tif";
-                saveDialog.DefaultExt = "jpg";
+                saveDialog.Filter = "SVG (editable; tiles preserved) (*.svg)|*.svg|JPEG Image (*.jpg)|*.jpg|PNG Image (*.png)|*.png|TIFF Image (*.tif)|*.tif";
+                saveDialog.DefaultExt = "svg";
                 saveDialog.AddExtension = true;
-                saveDialog.FileName = "assembled_output.jpg";
+                saveDialog.FileName = "assembled_output.svg";
 
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
