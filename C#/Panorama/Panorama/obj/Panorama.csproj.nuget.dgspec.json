@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj": {}
+    "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj": {
+    "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
+        "projectUniqueName": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
         "projectName": "Panorama",
-        "projectPath": "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
-        "packagesPath": "C:\\Users\\Дмитрий\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\obj\\",
+        "projectPath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
+        "packagesPath": "C:\\Users\\Rudko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Дмитрий\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Rudko\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -73,7 +74,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

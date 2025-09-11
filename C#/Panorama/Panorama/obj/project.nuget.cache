@@ -1,17 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "7jYYCaovvYHGbrO5xSYik+yXVNNwuMzju11RWEnsqyh+EQgTREsezRJjUJbSaOMl6QMnZjnYVAX95L3FxCwO7g==",
+  "dgSpecHash": "HSuX6hyVoAg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Дмитрий\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
+  "projectFilePath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Дмитрий\\.nuget\\packages\\sixlabors.imagesharp\\3.1.10\\sixlabors.imagesharp.3.1.10.nupkg.sha512"
+    "C:\\Users\\Rudko\\.nuget\\packages\\sixlabors.imagesharp\\3.1.10\\sixlabors.imagesharp.3.1.10.nupkg.sha512"
   ],
   "logs": [
     {
       "code": "NU1902",
       "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 3.1.10 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc",
+      "projectPath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
       "warningLevel": 1,
-      "message": "У пакета \"SixLabors.ImageSharp\" 3.1.10 есть известная уязвимость https://github.com/advisories/GHSA-rxmq-m78w-7wmc (уровень серьезности: средний уровень)",
+      "filePath": "C:\\Users\\Rudko\\Documents\\GitHub\\Panorama\\C#\\Panorama\\Panorama\\Panorama.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net8.0-windows7.0"

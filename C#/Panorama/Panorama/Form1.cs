@@ -524,7 +524,8 @@ namespace Panorama
             sb.AppendLine($"<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"{W}\" height=\"{H}\" viewBox=\"0 0 {W} {H}\">");
             sb.AppendLine("  <desc>Editable panorama. Each tile is a separate PNG with alpha; move/adjust tiles if needed.</desc>");
             // background is click-through
-            //sb.AppendLine("  <rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"black\" style=\"pointer-events:none\"/>");
+            if (BlackCanvasCheck.Checked) { sb.AppendLine("  <rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"black\" style=\"pointer-events:none\"/>"); }
+            //
 
             int processed = 0, total = tiles.Count;
             foreach (var t in tiles)
@@ -616,7 +617,7 @@ namespace Panorama
 
                 // Inform + clear old inputs
                 MessageBox.Show($"Composite image assembled and saved:\n{outputFilePath}");
-                ClearLoadedData(clearOutputPath: false);
+                ClearLoadedData(clearOutputPath: true);
             }
             catch (Exception ex)
             {
@@ -626,7 +627,7 @@ namespace Panorama
             {
                 // Reset/hide the progress bar
                 toolStripProgressBar1.Value = 0;
-                toolStripProgressBar1.Visible = false;
+                //toolStripProgressBar1.Visible = false;
             }
         }
 
@@ -717,6 +718,41 @@ namespace Panorama
             if (PromptForOutputPath())
             {
                 MessageBox.Show($"Output file path set to:\n{outputFilePath}");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (var folderDialog = new FolderBrowserDialog())
+            {
+                folderDialog.Description = "Select a folder with images";
+                folderDialog.ShowNewFolderButton = true;
+
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    imageFolderPath = folderDialog.SelectedPath;
+                    // lblSelectedPath.Text = _selectedFolderPath; 
+                    ReadImages(imageFolderPath);
+                    CheckIfDataReady();
+                }
+            }
+        }
+
+        private void LoadXMLButton_Click(object sender, EventArgs e)
+        {
+            using (var fileDialog = new OpenFileDialog())
+            {
+
+                fileDialog.Title = "Select a File with coordinates";
+                fileDialog.Filter = "XML Files (*.xml)|*.xml";
+
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    coordFilePath = fileDialog.FileName;
+                    ReadXML(coordFilePath);
+                    CheckIfDataReady();
+                }
             }
         }
     }
