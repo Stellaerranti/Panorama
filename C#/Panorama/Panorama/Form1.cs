@@ -30,6 +30,9 @@ namespace Panorama
         private string imageFolderPath = string.Empty;
         private string coordFilePath = string.Empty;
 
+        private float edgeBoostFactor = 0.7f; // Adjust this value to control edge influence
+        private bool useAdaptiveThresholding = true;
+
         List<(string name, string path)> images = new List<(string name, string path)>();
         public List<(string name, float x, float y, float z, float viewfield)> Locations { get; } =
             new List<(string name, float x, float y, float z, float viewfield)>();
@@ -192,6 +195,8 @@ namespace Panorama
 
             var nameToPath = images.ToDictionary(i => i.name, i => i.path, StringComparer.OrdinalIgnoreCase);
 
+            float edgeBoostFactorLocal = GetEdgeBoostFactorFromUI();
+
             // ---- 1) px/µm scale from full FOV (ignore overlap for scale) ----
             double scalePxPerUm = -1;
             foreach (var loc in Locations)
@@ -303,7 +308,7 @@ namespace Panorama
             {
                 using var tile = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(t.path);
 
-                using (var mask = BuildAlphaMask(tile, bgThresholdLocal, featherSigmaLocal))
+                using (var mask = BuildHybridMask(tile, bgThresholdLocal, featherSigmaLocal, edgeBoostFactorLocal))
                     ApplyAlphaMask(tile, mask);
 
                 int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
@@ -329,7 +334,7 @@ namespace Panorama
 
 
         // Builds an alpha mask where near-black becomes transparent (0), bright = opaque (255)
-        private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
+        /*private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
         BuildAlphaMask(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
                byte threshold, float featherSigma)
         {
@@ -351,11 +356,11 @@ namespace Panorama
                 mask.Mutate(ctx => ctx.GaussianBlur(featherSigma));
 
             return mask;
-        }
+        }*/
 
         private static void ApplyAlphaMask(
-        SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
-        SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> mask)
+    SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
+    SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8> mask)
         {
             if (src.Width != mask.Width || src.Height != mask.Height)
                 throw new ArgumentException("Mask and image sizes must match.");
@@ -364,16 +369,19 @@ namespace Panorama
             {
                 for (int x = 0; x < src.Width; x++)
                 {
-                    byte a = mask[x, y].PackedValue;
-                    if (a == 0)
+                    byte maskAlpha = mask[x, y].PackedValue;
+                    var originalPixel = src[x, y];
+
+                    if (maskAlpha == 0)
                     {
                         src[x, y] = new SixLabors.ImageSharp.PixelFormats.Rgba32(0, 0, 0, 0);
                     }
                     else
                     {
-                        var p = src[x, y];
-                        p.A = a;
-                        src[x, y] = p;
+                        // Preserve original alpha but apply our mask
+                        byte finalAlpha = (byte)((originalPixel.A * maskAlpha) / 255);
+                        src[x, y] = new SixLabors.ImageSharp.PixelFormats.Rgba32(
+                            originalPixel.R, originalPixel.G, originalPixel.B, finalAlpha);
                     }
                 }
             }
@@ -413,6 +421,8 @@ namespace Panorama
             float featherSigmaLocal = maskFeatherSigma;
 
             var nameToPath = images.ToDictionary(i => i.name, i => i.path, StringComparer.OrdinalIgnoreCase);
+
+            float edgeBoostFactorLocal = GetEdgeBoostFactorFromUI();
 
             // ---- 1) px/µm scale from full FOV ----
             double scalePxPerUm = -1;
@@ -531,7 +541,7 @@ namespace Panorama
             foreach (var t in tiles)
             {
                 using var tile = SixLabors.ImageSharp.Image.Load<Rgba32>(t.path);
-                using (var mask = BuildAlphaMask(tile, bgThresholdLocal, featherSigmaLocal))
+                using (var mask = BuildHybridMask(tile, bgThresholdLocal, featherSigmaLocal, edgeBoostFactorLocal))
                     ApplyAlphaMask(tile, mask);
 
                 int newW = Math.Max(1, (int)Math.Round(t.w * safeScale));
@@ -576,6 +586,177 @@ namespace Panorama
         }
 
 
+        // Add these methods to your Form1 class
+
+        private SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
+        BuildAlphaMask(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
+               byte threshold, float featherSigma)
+        {
+            // Get edge boost factor from textbox with validation
+            float boostFactor = GetEdgeBoostFactorFromUI();
+
+            // Use the hybrid approach with the UI-provided factor
+            return BuildHybridMask(src, threshold, featherSigma, boostFactor);
+        }
+
+        private float GetEdgeBoostFactorFromUI()
+        {
+            // Default value if parsing fails
+            float defaultFactor = 0.7f;
+
+            if (edgeBoostFactor_textBox == null || string.IsNullOrEmpty(edgeBoostFactor_textBox.Text))
+                return defaultFactor;
+
+            // Try to parse the textbox value
+            if (float.TryParse(edgeBoostFactor_textBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float result))
+            {
+                // Validate range (0.0 to 1.0 is typical, but you can adjust)
+                return Math.Clamp(result, 0.0f, 2.0f);
+            }
+
+            return defaultFactor;
+        }
+
+        private static byte CalculateAdaptiveThreshold(
+            SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> image,
+            byte defaultThreshold)
+        {
+            // Simple adaptive threshold based on image brightness
+            long totalLuminance = 0;
+            int pixelCount = image.Width * image.Height;
+
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    var p = image[x, y];
+                    totalLuminance += (int)(0.299f * p.R + 0.587f * p.G + 0.114f * p.B);
+                }
+            }
+
+            float averageLuminance = totalLuminance / (float)pixelCount;
+
+            // Adjust threshold based on image brightness
+            // Darker images get lower threshold, brighter images get higher
+            byte adjustedThreshold = (byte)Math.Clamp(averageLuminance * 0.5f, defaultThreshold * 0.5f, defaultThreshold * 1.5f);
+
+            return adjustedThreshold;
+        }
+
+        private static float CalculateSoftMask(float luminance, byte threshold, float existingAlpha)
+        {
+            // Soft transition around threshold
+            float softRange = threshold * 0.3f; // 30% soft transition
+            float lowerBound = threshold - softRange;
+            float upperBound = threshold + softRange;
+
+            if (luminance <= lowerBound)
+                return 0f; // Definitely background
+
+            if (luminance >= upperBound)
+                return 1f * existingAlpha; // Definitely foreground
+
+            // Smooth transition between lower and upper bounds
+            float transition = (luminance - lowerBound) / (upperBound - lowerBound);
+            return transition * existingAlpha;
+        }
+
+        private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
+        BuildLuminanceMask(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
+               byte threshold, float featherSigma)
+        {
+            var mask = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>(src.Width, src.Height);
+
+            // Calculate adaptive threshold
+            byte adaptiveThreshold = CalculateAdaptiveThreshold(src, threshold);
+
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    var p = src[x, y];
+
+                    // Better luminance calculation (perceptual)
+                    float luminance = (0.299f * p.R + 0.587f * p.G + 0.114f * p.B);
+
+                    // Consider alpha channel if present
+                    float finalAlpha = p.A / 255f;
+
+                    // Soft threshold with smooth transition
+                    float maskValue = CalculateSoftMask(luminance, adaptiveThreshold, finalAlpha);
+
+                    mask[x, y] = new SixLabors.ImageSharp.PixelFormats.L8((byte)(maskValue * 255));
+                }
+            }
+
+            if (featherSigma > 0f)
+                mask.Mutate(ctx => ctx.GaussianBlur(featherSigma));
+
+            return mask;
+        }
+
+        private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
+        BuildEdgeBasedMask(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
+               float featherSigma)
+        {
+            // Convert to grayscale first
+            using var grayscale = src.Clone();
+            grayscale.Mutate(ctx => ctx.Grayscale(GrayscaleMode.Bt709));
+
+            // Apply edge detection
+            using var edges = grayscale.Clone();
+            edges.Mutate(ctx => ctx.DetectEdges(KnownEdgeDetectorKernels.Sobel));
+
+            var mask = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>(src.Width, src.Height);
+
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    var edgePixel = edges[x, y];
+                    float edgeStrength = edgePixel.R / 255f;
+
+                    // Stronger edges get higher mask values
+                    float maskValue = Math.Clamp(edgeStrength * 2f, 0f, 1f);
+
+                    mask[x, y] = new SixLabors.ImageSharp.PixelFormats.L8((byte)(maskValue * 255));
+                }
+            }
+
+            if (featherSigma > 0f)
+                mask.Mutate(ctx => ctx.GaussianBlur(featherSigma));
+
+            return mask;
+        }
+
+        private static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>
+       BuildHybridMask(SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> src,
+       byte threshold, float featherSigma, float edgeBoostFactor = 0.7f) // Add parameter with default
+        {
+            var luminanceMask = BuildLuminanceMask(src, threshold, 0f); // No feathering yet
+            var edgeMask = BuildEdgeBasedMask(src, 0f); // No feathering yet
+
+            var finalMask = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.L8>(src.Width, src.Height);
+
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    float lumValue = luminanceMask[x, y].PackedValue / 255f;
+                    float edgeValue = edgeMask[x, y].PackedValue / 255f;
+
+                    // Combine masks - use the edgeBoostFactor parameter
+                    float combinedValue = Math.Clamp(Math.Max(lumValue, edgeValue * edgeBoostFactor), 0f, 1f);
+
+                    finalMask[x, y] = new SixLabors.ImageSharp.PixelFormats.L8((byte)(combinedValue * 255));
+                }
+            }
+
+            if (featherSigma > 0f)
+                finalMask.Mutate(ctx => ctx.GaussianBlur(featherSigma));
+
+            return finalMask;
+        }
 
         private async void OnDataReady()
         {

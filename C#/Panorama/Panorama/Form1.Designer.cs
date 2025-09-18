@@ -35,6 +35,8 @@
             saveOutput = new ToolStripButton();
             toolStripProgressBar1 = new ToolStripProgressBar();
             panel1 = new Panel();
+            edgeBoostFactor_textBox = new TextBox();
+            label1 = new Label();
             BlackCanvasCheck = new CheckBox();
             LoadXMLButton = new Button();
             ImageLoadButton = new Button();
@@ -47,7 +49,7 @@
             toolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton_imageFolder, toolStripButton_LockationFile, saveOutput, toolStripProgressBar1 });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(445, 25);
+            toolStrip.Size = new Size(449, 25);
             toolStrip.TabIndex = 0;
             toolStrip.Text = "toolStrip";
             // 
@@ -92,14 +94,33 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(edgeBoostFactor_textBox);
+            panel1.Controls.Add(label1);
             panel1.Controls.Add(BlackCanvasCheck);
             panel1.Controls.Add(LoadXMLButton);
             panel1.Controls.Add(ImageLoadButton);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 25);
             panel1.Name = "panel1";
-            panel1.Size = new Size(445, 64);
+            panel1.Size = new Size(449, 58);
             panel1.TabIndex = 1;
+            // 
+            // edgeBoostFactor_textBox
+            // 
+            edgeBoostFactor_textBox.Location = new Point(337, 4);
+            edgeBoostFactor_textBox.Name = "edgeBoostFactor_textBox";
+            edgeBoostFactor_textBox.Size = new Size(100, 23);
+            edgeBoostFactor_textBox.TabIndex = 5;
+            edgeBoostFactor_textBox.Text = "0.7";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(257, 6);
+            label1.Name = "label1";
+            label1.Size = new Size(74, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Маска фона";
             // 
             // BlackCanvasCheck
             // 
@@ -135,11 +156,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(445, 89);
+            ClientSize = new Size(449, 83);
             Controls.Add(panel1);
             Controls.Add(toolStrip);
             Name = "Form1";
-            Text = "Panorama maker for Tescan, IPE RAS, ver. 08Sep2025";
+            Text = "Panorama maker for Tescan, IPE RAS, ver. 18Sep2025";
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             panel1.ResumeLayout(false);
@@ -158,5 +179,7 @@
         private Button LoadXMLButton;
         private Button ImageLoadButton;
         private CheckBox BlackCanvasCheck;
+        private Label label1;
+        private TextBox edgeBoostFactor_textBox;
     }
 }
