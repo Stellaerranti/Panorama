@@ -414,7 +414,7 @@ namespace Panorama
                 throw new InvalidOperationException("No locations loaded.");
 
             // ---- Settings ----
-            const bool EMBED = true; // set to false to link external PNGs next to the SVG
+            const bool EMBED = false; // set to false to link external PNGs next to the SVG
             bool preferMirroredX = true;
 
             byte bgThresholdLocal = bgThreshold;

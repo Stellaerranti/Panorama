@@ -160,7 +160,7 @@
             Controls.Add(panel1);
             Controls.Add(toolStrip);
             Name = "Form1";
-            Text = "Panorama maker for Tescan, IPE RAS, ver. 18Sep2025";
+            Text = "Panorama maker for Tescan, IPE RAS, ver. 29Sep2025";
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             panel1.ResumeLayout(false);
